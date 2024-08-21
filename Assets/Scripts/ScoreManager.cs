@@ -20,7 +20,7 @@ public class ScoreManager : MonoBehaviour
         GameManager.Instance.OnLevelReset -= ResetStars;
     }
 
-    public void TryFindNeededQuest(string givenTag)
+    public void TryFindNeededQuest(ScorableObjectTags givenTag)
     {
         foreach(ScoreQuest quest in scoreQuests)
         {

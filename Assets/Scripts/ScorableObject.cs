@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ScorableObject : MonoBehaviour
 {
-    [SerializeField] private string interactToScoreTag = "empty";
+    [SerializeField] private List<ScorableObjectTags> scorableTags = new List<ScorableObjectTags>();
 
     private bool scored = false;
 
@@ -23,15 +23,35 @@ public class ScorableObject : MonoBehaviour
         scored = false;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (scored)
+            return;
+
+        foreach (ScorableObjectTags scorableTag in scorableTags)
+        {
+            if (other.gameObject.tag == scorableTag.ToString())
+            {
+                scored = true;
+                ScoreManager.Instance.TryFindNeededQuest(scorableTag);
+                break;
+            }
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (scored)
             return;
 
-        if(collision.gameObject.tag == interactToScoreTag)
+        foreach(ScorableObjectTags scorableTag in scorableTags)
         {
-            scored = true;
-            ScoreManager.Instance.TryFindNeededQuest(gameObject.tag);
-        }
+            if (collision.gameObject.tag == scorableTag.ToString())
+            {
+                scored = true;
+                ScoreManager.Instance.TryFindNeededQuest(scorableTag);
+                break;
+            }
+        }     
     }
 }

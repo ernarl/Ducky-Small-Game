@@ -9,7 +9,7 @@ public class ScoreQuest : MonoBehaviour
     [Header("Quest Parameters")]
     [SerializeField] private string title = "Empty Title";
     [SerializeField] private string description = "Empty Description";
-    [SerializeField] private string scoreTag = "empty";
+    [SerializeField] private ScorableObjectTags scoreTag = ScorableObjectTags.Floor;
     [SerializeField] private int amountToFinish = 1;
 
     [Header("Quest References")]
@@ -42,7 +42,7 @@ public class ScoreQuest : MonoBehaviour
         progressSlider.value = 0f;
     }
 
-    public void TryAddScore(string givenTag)
+    public void TryAddScore(ScorableObjectTags givenTag)
     {
         if (givenTag != scoreTag || currentAmount >= amountToFinish)
             return;
