@@ -12,6 +12,7 @@ public class ScoreManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        SetupStartingStarAmount();
         GameManager.Instance.OnLevelReset += ResetStars;
     }
 
@@ -28,6 +29,16 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
+    private void SetupStartingStarAmount()
+    {
+        if(scoreQuests.Count > 3)
+        {
+            Debug.LogError("Wrong scoreQuest amount!");
+        }
+
+        starAmount = 3 - scoreQuests.Count;
+    }
+
     public void AddStar()
     {
         starAmount++;
@@ -37,5 +48,10 @@ public class ScoreManager : MonoBehaviour
     private void ResetStars()
     {
         starAmount = 0;
+    }
+
+    public int GetCurrentStarAmount()
+    {
+        return starAmount;
     }
 }

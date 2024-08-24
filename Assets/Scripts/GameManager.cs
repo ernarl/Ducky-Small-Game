@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerController player;
 
     public event Action OnLevelReset;
+    public event Action OnEscapePressed;
+
+    private const string LEVEL_NAME = "Level_";
 
     private void Awake()
     {
@@ -21,6 +25,15 @@ public class GameManager : MonoBehaviour
         {
             ResetStage();
         }
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            EscapePressed();
+        }
+    }
+
+    private void EscapePressed()
+    {
+        OnEscapePressed?.Invoke();
     }
 
     public void ResetStage()
@@ -31,5 +44,8 @@ public class GameManager : MonoBehaviour
     public void WinStage()
     {
         Debug.Log("Stage Won!");
+        PersistantData.Instance.SetLevelConpletedInfo(ScoreManager.Instance.GetCurrentStarAmount());
+        PersistantData.Instance.SavePlayer();
+        SceneManager.LoadScene(LEVEL_NAME + (PersistantData.Instance.levelId + 1).ToString());
     }
 }

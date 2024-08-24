@@ -10,6 +10,9 @@ public class PersistantData : MonoBehaviour
     public float Volume = 0.3f;
     public float VolumeSfx = 0.3f;
 
+    public int levelId;
+    [Header("LoadedData")]
+    public PlayerData playerData = new PlayerData();
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
@@ -23,6 +26,7 @@ public class PersistantData : MonoBehaviour
             DontDestroyOnLoad(this);
             Instance = this;
             LoadPlayerPrefs();
+            LoadPlayerData();
         }
     }
     private void LoadPlayerPrefs()
@@ -53,5 +57,21 @@ public class PersistantData : MonoBehaviour
         // Save the SFX volume data to PlayerPrefs
         PlayerPrefs.SetFloat(SfxVolumeKey, VolumeSfx);
         PlayerPrefs.Save();
+    }
+
+    private void LoadPlayerData()
+    {
+        playerData = SaveSystem.LoadPlayer();
+    }
+
+    public void SetLevelConpletedInfo(int _starAmount)
+    {
+        playerData.LevelFinished[levelId] = true;
+        playerData.LevelStars[levelId] = _starAmount;
+    }
+
+    public void SavePlayer()
+    {
+        SaveSystem.SavePlayer(playerData);
     }
 }
