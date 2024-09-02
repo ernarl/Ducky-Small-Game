@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5107227656861690620}
   - component: {fileID: 6931640809856474635}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 3111417521865620895}
   - component: {fileID: 921283583042718037}
   - component: {fileID: 1947977436852098524}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CabinetWithFaucet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1047260838003396513}
   - component: {fileID: 1103773603860747720}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199,7 +199,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8080336117831850162}
   - component: {fileID: 5384316564841959311}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -244,7 +244,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5474974026768184814}
   - component: {fileID: 7067775410231844226}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -289,7 +289,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4103690719894558060}
   - component: {fileID: 6431789098993400368}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -373,7 +373,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8163126524751247971}
   - component: {fileID: 4176269028217694842}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -518,6 +518,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6142e13d0372f814ba8e8cde511584b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waterSplashParticles: {fileID: 7464027980632091767, guid: a2ed8fda772f07b41916350420e19450,
+    type: 3}
 --- !u!1 &5567699924890626280
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,7 +530,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5666979094654997349}
   - component: {fileID: 4638645933863461741}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -573,7 +575,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5450583391690023192}
   - component: {fileID: 6644015149981626386}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}

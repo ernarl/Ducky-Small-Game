@@ -2,9 +2,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Moving")]
     [SerializeField] private float moveSpeed = 5f; // Speed of the player movement
     [SerializeField] private float maxSpeed = 5f;
+
+    [Header("Jumping")]
+    [SerializeField] private float jumpForce = 5f; // Force applied to the jump
+    [SerializeField] private LayerMask groundLayer; // Layer to identify what is considered ground
+    [SerializeField] private Transform groundCheckTransform;
+
     private Rigidbody rb;
+    private bool isGrounded;
 
     private void Awake()
     {
@@ -32,6 +40,23 @@ public class PlayerController : MonoBehaviour
             // Clamp the velocity to the maxSpeed
             rb.velocity = rb.velocity.normalized * maxSpeed;
         }
+
+        // Check if the player is on the ground
+        isGrounded = Physics.CheckSphere(groundCheckTransform.position, 0.23f, groundLayer);
+
+        // Check for jump input
+        if (isGrounded && Input.GetButtonDown("Jump"))
+        {
+            // Apply upward force for jumping
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Draw a yellow sphere at the transform's position to visualize the ground check sphere
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(groundCheckTransform.position, 0.23f);
     }
 
     public void ResetVelocity()
