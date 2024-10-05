@@ -11,50 +11,52 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer; // Layer to identify what is considered ground
     [SerializeField] private Transform groundCheckTransform;
 
-    private Rigidbody rb;
+    [Header("References")]
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private ParticleSystem jumpParticlesPrefab;
+
     private bool isGrounded;
+    private Transform cameraTransform;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        cameraTransform = Camera.main.transform;
     }
 
     private void Update()
     {
-        // Get input from WASD or arrow keys
         float moveX = Input.GetAxis("Horizontal");
         float moveY = Input.GetAxis("Vertical");
 
-        // Create a movement vector based on the input
-        Vector3 moveDirection = new Vector3(moveX, 0, moveY);
+        Vector3 cameraForward = cameraTransform.forward;
+        Vector3 cameraRight = cameraTransform.right;
 
-        // Normalize the direction vector to ensure consistent movement speed
+        cameraForward.y = 0f;
+        cameraForward.Normalize();
+
+        cameraRight.y = 0f;
+        cameraRight.Normalize();
+
+        Vector3 moveDirection = (cameraForward * moveY) + (cameraRight * moveX);
         moveDirection.Normalize();
-
-        // Apply force to the Rigidbody in the direction of the input
         rb.AddForce(moveDirection * moveSpeed, ForceMode.Force);
 
-        // Check if the player's speed exceeds the maximum speed
         if (rb.velocity.magnitude > maxSpeed)
         {
-            // Clamp the velocity to the maxSpeed
             rb.velocity = rb.velocity.normalized * maxSpeed;
         }
 
-        // Check if the player is on the ground
         isGrounded = Physics.CheckSphere(groundCheckTransform.position, 0.23f, groundLayer);
 
-        // Check for jump input
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            // Apply upward force for jumping
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            Instantiate(jumpParticlesPrefab, groundCheckTransform.position - new Vector3(0, 0.15f, 0), Quaternion.Euler(-90, 0, 0));
         }
     }
 
     private void OnDrawGizmos()
     {
-        // Draw a yellow sphere at the transform's position to visualize the ground check sphere
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(groundCheckTransform.position, 0.23f);
     }

@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class ResetableObject : MonoBehaviour
 {
+    [SerializeField] private Rigidbody rb;
     private Vector3 startingPosition;
     private Quaternion startingRotation;
-    private Rigidbody rb;
+    
 
     private void Awake()
     {
         startingPosition = transform.position;
         startingRotation = transform.rotation;
-        rb = GetComponent<Rigidbody>();
         GameManager.Instance.OnLevelReset += ResetGameObject;
     }
 
