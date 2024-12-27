@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     [SerializeField] private PlayerController player;
-
+    [SerializeField] private bool isLastLevel = false;
+    
     public event Action OnLevelReset;
     public event Action OnEscapePressed;
 
@@ -46,6 +47,13 @@ public class GameManager : MonoBehaviour
         Debug.Log("Stage Won!");
         PersistantData.Instance.SetLevelConpletedInfo(ScoreManager.Instance.GetCurrentStarAmount());
         PersistantData.Instance.SavePlayer();
-        SceneManager.LoadScene(LEVEL_NAME + (PersistantData.Instance.levelId + 1).ToString());
+        if(isLastLevel)
+        {
+            SceneManager.LoadScene(1);
+        }
+        else
+        {
+            SceneManager.LoadScene(LEVEL_NAME + (PersistantData.Instance.levelId + 1).ToString());
+        }
     }
 }

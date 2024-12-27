@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LevelUIManager : MonoBehaviour
 {
     [SerializeField] private List<LevelButton> levelButtons = new List<LevelButton>();
+    [SerializeField] private Button backButton = null;
     [SerializeField] private Sprite levelLockedSprite;
     [SerializeField] private Sprite levelCompletedSprite;
     [SerializeField] private Sprite starClaimedSprite;
@@ -44,5 +46,10 @@ public class LevelUIManager : MonoBehaviour
             }
             i++;
         }
+
+        backButton.onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene(0);
+        });
     }
 }

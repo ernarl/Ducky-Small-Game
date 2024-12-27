@@ -46,12 +46,101 @@ public class PlayerController : MonoBehaviour
             rb.velocity = rb.velocity.normalized * maxSpeed;
         }
 
-        isGrounded = Physics.CheckSphere(groundCheckTransform.position, 0.23f, groundLayer);
 
-        if (isGrounded && Input.GetButtonDown("Jump"))
+        // Sometiems doesnt jump when expected to
+
+        // Define the ground check sphere's radius
+        float sphereRadius = 0.23f;
+        Vector3 groundCheckPos = groundCheckTransform.position;
+
+        // Get all colliders in the ground check area
+        Collider[] colliders = Physics.OverlapSphere(groundCheckPos, sphereRadius, groundLayer);
+
+        isGrounded = false; // Default to not grounded
+
+        // Loop through all colliders to check for valid ground
+        foreach (Collider collider in colliders)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            Instantiate(jumpParticlesPrefab, groundCheckTransform.position - new Vector3(0, 0.15f, 0), Quaternion.Euler(-90, 0, 0));
+            // Get the bounds of the collider
+            Bounds colliderBounds = collider.bounds;
+
+            // Check if the player's feet (groundCheckPos) are above the top surface of the collider
+            if (groundCheckPos.y > colliderBounds.max.y)
+            {
+                // Try a raycast first
+                RaycastHit hit;
+                Vector3 rayOrigin = groundCheckPos + Vector3.up * 0.1f;
+                if (Physics.Raycast(rayOrigin, Vector3.down, out hit, sphereRadius + 0.2f, groundLayer))
+                {
+                    if (Vector3.Angle(hit.normal, Vector3.up) < 45f)
+                    {
+                        isGrounded = true;
+                        break;
+                    }
+                }
+                else
+                {
+                    // Fallback to bounds-based approximation
+                    Debug.Log("Raycast failed; checking using collider bounds.");
+                    if (collider is BoxCollider || collider is MeshCollider)
+                    {
+                        Vector3 surfaceNormal = Vector3.up; // Assume flat surface
+                        if (Vector3.Angle(surfaceNormal, Vector3.up) < 45f)
+                        {
+                            isGrounded = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (isGrounded)
+            {
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                Instantiate(jumpParticlesPrefab, groundCheckTransform.position - new Vector3(0, 0.15f, 0), Quaternion.Euler(-90, 0, 0));
+            }
+            else
+            {
+                Debug.LogWarning("Jump input detected, but player is not grounded.");
+
+                if (colliders.Length == 0)
+                {
+                    Debug.LogWarning("No colliders detected within the ground check sphere.");
+                }
+                else
+                {
+                    foreach (Collider collider in colliders)
+                    {
+                        Bounds colliderBounds = collider.bounds;
+
+                        if (groundCheckPos.y <= colliderBounds.max.y - 0.1f)
+                        {
+                            Debug.Log("Ground check position is below or inside the collider bounds.");
+                        }
+                        else
+                        {
+                            RaycastHit hit;
+                            if (Physics.Raycast(groundCheckPos, Vector3.down, out hit, sphereRadius + 0.1f))
+                            {
+                                if (Vector3.Angle(hit.normal, Vector3.up) >= 45f)
+                                {
+                                    Debug.Log($"Surface detected but too steep: {Vector3.Angle(hit.normal, Vector3.up)} degrees.");
+                                }
+                            }
+                            else
+                            {
+                                Debug.Log("Raycast did not hit any valid ground surface.");
+                            }
+                        }
+                    }
+                }
+
+                Debug.Log($"Ground check position: {groundCheckPos}, sphere radius: {sphereRadius}");
+                Debug.Log($"Number of colliders detected: {colliders.Length}");
+            }
         }
     }
 
