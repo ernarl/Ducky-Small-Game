@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class LevelButton : MonoBehaviour
 {
@@ -23,7 +22,7 @@ public class LevelButton : MonoBehaviour
     private void LoadLevelScene()
     {
         PersistantData.Instance.levelId = index;
-        SceneManager.LoadScene(LEVEL_NAME + index.ToString());
+        SceneTransition.LoadScene(LEVEL_NAME + index.ToString());
     }
 
     public void SetLevelIndex(int _index)

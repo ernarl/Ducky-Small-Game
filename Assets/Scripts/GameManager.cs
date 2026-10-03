@@ -8,16 +8,28 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     [SerializeField] private PlayerController player;
-    [SerializeField] private bool isLastLevel = false;
-    
+
     public event Action OnLevelReset;
-    public event Action OnEscapePressed;
 
     private const string LEVEL_NAME = "Level_";
+    private const string LEVEL_SELECTION_SCENE = "LevelPicking";
 
     private void Awake()
     {
         Instance = this;
+        SyncLevelIdWithScene();
+    }
+
+    // Take the level id from the scene name (Level_N) so it's always correct, even when a level is opened directly
+    private void SyncLevelIdWithScene()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (PersistantData.Instance != null
+            && sceneName.StartsWith(LEVEL_NAME)
+            && int.TryParse(sceneName.Substring(LEVEL_NAME.Length), out int sceneLevelId))
+        {
+            PersistantData.Instance.levelId = sceneLevelId;
+        }
     }
 
     private void Update()
@@ -28,13 +40,13 @@ public class GameManager : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            EscapePressed();
+            ReturnToLevelSelection();
         }
     }
 
-    private void EscapePressed()
+    private void ReturnToLevelSelection()
     {
-        OnEscapePressed?.Invoke();
+        SceneTransition.LoadScene(LEVEL_SELECTION_SCENE);
     }
 
     public void ResetStage()
@@ -47,13 +59,18 @@ public class GameManager : MonoBehaviour
         Debug.Log("Stage Won!");
         PersistantData.Instance.SetLevelConpletedInfo(ScoreManager.Instance.GetCurrentStarAmount());
         PersistantData.Instance.SavePlayer();
-        if(isLastLevel)
+
+        int nextLevelId = PersistantData.Instance.levelId + 1;
+        string nextLevelScene = LEVEL_NAME + nextLevelId.ToString();
+        if(Application.CanStreamedLevelBeLoaded(nextLevelScene))
         {
-            SceneManager.LoadScene(1);
+            PersistantData.Instance.levelId = nextLevelId;
+            SceneTransition.LoadScene(nextLevelScene);
         }
         else
         {
-            SceneManager.LoadScene(LEVEL_NAME + (PersistantData.Instance.levelId + 1).ToString());
+            // No next level in the build, so this was the last one
+            SceneTransition.LoadScene(1);
         }
     }
 }

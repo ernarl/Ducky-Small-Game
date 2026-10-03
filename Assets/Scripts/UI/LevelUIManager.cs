@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LevelUIManager : MonoBehaviour
@@ -15,6 +14,19 @@ public class LevelUIManager : MonoBehaviour
     private void Awake()
     {
         SetupButtons();
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            GoToMainScreen();
+        }
+    }
+
+    private void GoToMainScreen()
+    {
+        SceneTransition.LoadScene(0);
     }
 
     private void SetupButtons()
@@ -47,9 +59,6 @@ public class LevelUIManager : MonoBehaviour
             i++;
         }
 
-        backButton.onClick.AddListener(() =>
-        {
-            SceneManager.LoadScene(0);
-        });
+        backButton.onClick.AddListener(GoToMainScreen);
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMeniu : BasicMeniu
@@ -33,7 +32,7 @@ public class MainMeniu : BasicMeniu
 
         playbutton.onClick.AddListener(() =>
         {
-            SceneManager.LoadScene("LevelPicking");
+            SceneTransition.LoadScene("LevelPicking");
         });
     }
 }

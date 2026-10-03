@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EscapeMeniu : BasicMeniu
@@ -14,7 +13,7 @@ public class EscapeMeniu : BasicMeniu
     {
         goBackButton.onClick.AddListener(() =>
         {
-            SceneManager.LoadScene(0);
+            SceneTransition.LoadScene(0);
         });
         restartButton.onClick.AddListener(() =>
         {
@@ -26,13 +25,7 @@ public class EscapeMeniu : BasicMeniu
             Close();
         });
 
-        GameManager.Instance.OnEscapePressed += Instance_OnEscapePressed;
         Close();
-    }
-
-    private void OnDestroy()
-    {
-        GameManager.Instance.OnEscapePressed -= Instance_OnEscapePressed;
     }
 
     public override void Open()
@@ -45,17 +38,5 @@ public class EscapeMeniu : BasicMeniu
     {
         Time.timeScale = 1;
         base.Close();
-    }
-
-    private void Instance_OnEscapePressed()
-    {
-        if(gameObject.activeSelf)
-        {
-            Close();
-        }
-        else
-        {
-            Open();
-        }
     }
 }
