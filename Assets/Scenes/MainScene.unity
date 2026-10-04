@@ -2776,7 +2776,124 @@ MonoBehaviour:
   audioSource: {fileID: 1175206467}
   audioSourceSfx: {fileID: 1175206466}
   clipsMusic: []
-  clipsSfx: []
+  clipsSfx:
+  - name: Jump
+    clip: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
+    volume: 0.7
+    volumeVariance: 0.05
+    pitch: 1
+    pitchVariance: 0.08
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: Land
+    clip: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
+    volume: 0.45
+    volumeVariance: 0.1
+    pitch: 1
+    pitchVariance: 0.1
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: CameraRotate
+    clip: {fileID: 8300000, guid: 3becec1909f194046945d85ac1077772, type: 3}
+    volume: 0.4
+    volumeVariance: 0.05
+    pitch: 1
+    pitchVariance: 0.05
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: QuestProgress
+    clip: {fileID: 8300000, guid: c96eddc84fb19944ba3a1e9db00958db, type: 3}
+    volume: 0.8
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: QuestComplete
+    clip: {fileID: 8300000, guid: e0a225462a0fdd74c95c605a4264959f, type: 3}
+    volume: 0.8
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: Splash
+    clip: {fileID: 8300000, guid: 81652031b64c342cc8dbc59c138d77c5, type: 3}
+    volume: 0.9
+    volumeVariance: 0.05
+    pitch: 1
+    pitchVariance: 0.05
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: LevelWin
+    clip: {fileID: 8300000, guid: 3ba8639f1f6746a4b8568b3e64dc3d7a, type: 3}
+    volume: 0.8
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: LevelLose
+    clip: {fileID: 8300000, guid: ca8b87afe2dea4249b348f590860e20f, type: 3}
+    volume: 0.7
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: LevelRestart
+    clip: {fileID: 8300000, guid: 8ba69ca83d62ed74cb40537bd448e020, type: 3}
+    volume: 0.6
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: ButtonClick
+    clip: {fileID: 8300000, guid: 3ed76c41842994a42ae840e90de01794, type: 3}
+    volume: 0.8
+    volumeVariance: 0.05
+    pitch: 1
+    pitchVariance: 0.05
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: ButtonHover
+    clip: {fileID: 8300000, guid: 9e8e1f1604f1b594da7ca2d0cb943417, type: 3}
+    volume: 0.35
+    volumeVariance: 0.05
+    pitch: 1
+    pitchVariance: 0.05
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: ButtonLocked
+    clip: {fileID: 8300000, guid: fc77b7fd6739b0143b3bdff8533f7d50, type: 3}
+    volume: 0.8
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
+  - name: SceneTransition
+    clip: {fileID: 8300000, guid: eaece652b7461a545bc3e5ef36d1ce7b, type: 3}
+    volume: 0.5
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
 --- !u!82 &1175206466
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3910,6 +4027,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2463e3d73000204780f74b34ca91718, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  musicSlider: {fileID: 1930990876}
+  sfxSlider: {fileID: 623457524}
 --- !u!1 &1617866316
 GameObject:
   m_ObjectHideFlags: 0

@@ -52,6 +52,7 @@ public class CameraController : MonoBehaviour
     {
         // Stack onto the target so quick repeated presses keep turning from where the camera currently is
         targetAngle += angle;
+        AudioManager.Play(SoundNames.CameraRotate);
 
         LeanTween.cancel(rotationTweenId);
         rotationTweenId = LeanTween.value(gameObject, SetAngle, currentAngle, targetAngle, rotationDuration)

@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            AudioManager.Play(SoundNames.LevelRestart);
             ResetStage();
         }
         if(Input.GetKeyDown(KeyCode.Escape))
@@ -57,6 +58,7 @@ public class GameManager : MonoBehaviour
     public void WinStage()
     {
         Debug.Log("Stage Won!");
+        AudioManager.Play(SoundNames.LevelWin);
         PersistantData.Instance.SetLevelConpletedInfo(ScoreManager.Instance.GetCurrentStarAmount());
         PersistantData.Instance.SavePlayer();
 

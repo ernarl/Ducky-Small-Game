@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxGroundAngle = 45f; // Steepest surface that still counts as ground
     [SerializeField] private float coyoteTime = 0.1f; // Can still jump this long after losing contact with the ground
     [SerializeField] private float jumpBufferTime = 0.15f; // A jump pressed this long before landing still happens
+    [SerializeField] private float landSoundMinAirTime = 0.3f; // Shorter hops and bumps while rolling don't play the landing sound
 
     [Header("References")]
     [SerializeField] private Rigidbody rb;
@@ -25,11 +26,14 @@ public class PlayerController : MonoBehaviour
     private float lastGroundedTime = float.NegativeInfinity;
     private float lastJumpPressedTime = float.NegativeInfinity;
     private float lastJumpTime = float.NegativeInfinity;
+    private float lastTouchingGroundTime;
     private Transform cameraTransform;
 
     private void Awake()
     {
         cameraTransform = Camera.main.transform;
+        // So touching the ground the duck starts on doesn't count as landing
+        lastTouchingGroundTime = Time.time;
     }
 
     private void Update()
@@ -81,6 +85,15 @@ public class PlayerController : MonoBehaviour
         {
             lastGroundedTime = Time.time;
         }
+
+        if (touchingGround)
+        {
+            if (Time.time - lastTouchingGroundTime > landSoundMinAirTime)
+            {
+                AudioManager.Play(SoundNames.Land);
+            }
+            lastTouchingGroundTime = Time.time;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -120,6 +133,7 @@ public class PlayerController : MonoBehaviour
 
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         Instantiate(jumpParticlesPrefab, groundCheckTransform.position - new Vector3(0, 0.15f, 0), Quaternion.Euler(-90, 0, 0));
+        AudioManager.Play(SoundNames.Jump);
     }
 
     public void ResetVelocity()

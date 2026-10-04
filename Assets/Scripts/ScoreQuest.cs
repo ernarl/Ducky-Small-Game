@@ -48,6 +48,7 @@ public class ScoreQuest : MonoBehaviour
             return;
 
         currentAmount++;
+        AudioManager.Play(SoundNames.QuestProgress);
         UpdateSlider();
         UpdateToScoreAmount();
 
@@ -76,6 +77,7 @@ public class ScoreQuest : MonoBehaviour
         if (currentAmount < amountToFinish)
             return;
 
+        AudioManager.Play(SoundNames.QuestComplete);
         AnimateBackgroundColor(backgroundImage.color, finishedColor);
         AnimatePopQuest();
     }

@@ -80,6 +80,7 @@ public class SceneTransition : MonoBehaviour
         isTransitioning = true;
         BuildSquares();
         canvas.enabled = true;
+        AudioManager.Play(SoundNames.SceneTransition);
 
         yield return AnimateSquares(true);
 

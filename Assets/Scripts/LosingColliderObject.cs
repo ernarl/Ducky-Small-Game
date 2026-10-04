@@ -8,6 +8,7 @@ public class LosingColliderObject : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
+            AudioManager.Play(SoundNames.LevelLose);
             GameManager.Instance.ResetStage();
         }
     }

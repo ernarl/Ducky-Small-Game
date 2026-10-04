@@ -14,6 +14,7 @@ public class WinningColliderObject : MonoBehaviour
             triggered = true;
             Vector3 collisionPoint = other.ClosestPoint(transform.position);
             Instantiate(waterSplashParticles, collisionPoint, Quaternion.identity);
+            AudioManager.Play(SoundNames.Splash);
             GameManager.Instance.WinStage();
         }
     }
