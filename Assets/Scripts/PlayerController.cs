@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
     [Header("Moving")]
     [SerializeField] private float moveSpeed = 5f; // Speed of the player movement
     [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float editorFrameRate = 250f; // The editor's frame rate while playing (Game view > Stats), builds move the same as the editor at it
 
     [Header("Jumping")]
     [SerializeField] private float jumpForce = 5f; // Force applied to the jump
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private ParticleSystem jumpParticlesPrefab;
 
     private const float IGNORE_GROUND_AFTER_JUMP_TIME = 0.1f; // Contacts from the jump frame itself shouldn't allow a second jump
+    private const float MAX_FRAME_TIME = 0.05f;
 
     private bool touchingGround;
     private bool groundContactThisStep;
@@ -53,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
         Vector3 moveDirection = (cameraForward * moveY) + (cameraRight * moveX);
         moveDirection.Normalize();
-        rb.AddForce(moveDirection * moveSpeed, ForceMode.Force);
+        rb.AddForce(moveDirection * moveSpeed * GetFrameRateScale(), ForceMode.Force);
 
         LimitSpeed();
 
@@ -68,6 +70,20 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
+    }
+
+    // Forces added every frame pile up until the next physics step, so how hard the duck is pushed depends on the frame rate.
+    // The movement was tuned in the editor, which runs at a high frame rate, while a build (like WebGL in a browser) runs at a
+    // much lower one and the duck barely moved there. So in builds each frame pushes as hard as editorFrameRate frames would
+    private float GetFrameRateScale()
+    {
+        if (Application.isEditor)
+        {
+            return 1f;
+        }
+
+        // Capped, so one slow frame (a hitch) doesn't shove the duck
+        return Mathf.Min(Time.deltaTime, MAX_FRAME_TIME) * editorFrameRate;
     }
 
     private void FixedUpdate()

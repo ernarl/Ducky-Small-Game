@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scorableTags: 00000000
+  fallDistanceToScore: 0
 --- !u!1 &2512821514544026922
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,11 +163,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2.3
   maxSpeed: 2
+  editorFrameRate: 750
   jumpForce: 10
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   groundCheckTransform: {fileID: 1414123507878460251}
+  maxGroundAngle: 45
+  coyoteTime: 0.1
+  jumpBufferTime: 0.15
+  landSoundMinAirTime: 0.3
+  fallGravityMultiplier: 2.5
   rb: {fileID: 627517520827476457}
   jumpParticlesPrefab: {fileID: 1900034409703983788, guid: d7fc6a37baa3845409d1f6755d48d1f1,
     type: 3}

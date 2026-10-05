@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,6 +24,13 @@ public class AudioManager : MonoBehaviour
     private float sfxSound;
 
     private bool playWithSound = true;
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+    // In Assets/Plugins/WebGL/PauseAudioWhenUnfocused.jslib
+    [DllImport("__Internal")]
+    private static extern void PauseAudioWhenUnfocused();
+#endif
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -36,6 +44,21 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         CreateSfxSources();
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // Silences the game while it's in a background tab or another window is focused
+        PauseAudioWhenUnfocused();
+#endif
+    }
+
+    // In a browser the game stops while it isn't focused (like after a click on the page around it),
+    // but sounds that already started would keep playing, so they wait for the game too
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            AudioListener.pause = !hasFocus;
+        }
     }
 
     private void OnDestroy()
