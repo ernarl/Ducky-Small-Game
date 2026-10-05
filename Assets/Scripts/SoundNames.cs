@@ -1,6 +1,9 @@
-// Names of the sounds set up in the AudioManager's Sfx list (on the AudioManager object in MainScene)
+// Names of the sounds set up in the AudioManager's Music and Sfx lists (on the AudioManager object in MainScene)
 public static class SoundNames
 {
+    // Music
+    public const string MainMusic = "MainMusic";
+
     // Gameplay
     public const string Jump = "Jump";
     public const string Land = "Land";

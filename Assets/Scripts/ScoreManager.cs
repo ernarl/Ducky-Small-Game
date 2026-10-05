@@ -7,18 +7,16 @@ public class ScoreManager : MonoBehaviour
     public static ScoreManager Instance;
     [SerializeField] private List<ScoreQuest> scoreQuests = new List<ScoreQuest>();
 
-    private int starAmount = 0;
+    public const int MAX_STARS = 3;
 
     private void Awake()
     {
         Instance = this;
-        SetupStartingStarAmount();
-        GameManager.Instance.OnLevelReset += ResetStars;
-    }
 
-    private void OnDestroy()
-    {
-        GameManager.Instance.OnLevelReset -= ResetStars;
+        if(scoreQuests.Count > MAX_STARS)
+        {
+            Debug.LogError("Wrong scoreQuest amount!");
+        }
     }
 
     public void TryFindNeededQuest(ScorableObjectTags givenTag)
@@ -29,29 +27,18 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    private void SetupStartingStarAmount()
-    {
-        if(scoreQuests.Count > 3)
-        {
-            Debug.LogError("Wrong scoreQuest amount!");
-        }
-
-        starAmount = 3 - scoreQuests.Count;
-    }
-
-    public void AddStar()
-    {
-        starAmount++;
-        Debug.Log($"Current star amount: {starAmount}");
-    }
-
-    private void ResetStars()
-    {
-        starAmount = 0;
-    }
-
+    // All quests finished gives 3 stars, every unfinished quest takes one away
     public int GetCurrentStarAmount()
     {
-        return starAmount;
+        int unfinishedQuests = 0;
+        foreach(ScoreQuest quest in scoreQuests)
+        {
+            if(!quest.IsFinished())
+            {
+                unfinishedQuests++;
+            }
+        }
+
+        return Mathf.Max(0, MAX_STARS - unfinishedQuests);
     }
 }

@@ -44,18 +44,18 @@ public class ScoreQuest : MonoBehaviour
 
     public void TryAddScore(ScorableObjectTags givenTag)
     {
-        if (givenTag != scoreTag || currentAmount >= amountToFinish)
+        if (givenTag != scoreTag || IsFinished())
             return;
 
         currentAmount++;
         AudioManager.Play(SoundNames.QuestProgress);
         UpdateSlider();
         UpdateToScoreAmount();
+    }
 
-        if (currentAmount >= amountToFinish)
-        {
-            OnQuestFinish();
-        }
+    public bool IsFinished()
+    {
+        return currentAmount >= amountToFinish;
     }
 
     private void UpdateSlider()
@@ -74,7 +74,7 @@ public class ScoreQuest : MonoBehaviour
 
     private void TryAnimatePopQuest()
     {
-        if (currentAmount < amountToFinish)
+        if (!IsFinished())
             return;
 
         AudioManager.Play(SoundNames.QuestComplete);
@@ -114,11 +114,6 @@ public class ScoreQuest : MonoBehaviour
     private void UpdateToScoreAmount()
     {
         scoreTMPText.text = $"{currentAmount}/{amountToFinish}";
-    }
-
-    private void OnQuestFinish()
-    {
-        ScoreManager.Instance.AddStar();
     }
 
     private void OnQuestReset()

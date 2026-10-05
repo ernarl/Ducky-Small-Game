@@ -58,6 +58,9 @@ public class AudioManager : MonoBehaviour
 
         sfxSound = PersistantData.Instance.VolumeSfx;
 
+        // Started once here: the AudioManager stays between scenes, so the music keeps looping without restarting
+        PlayMusic(SoundNames.MainMusic);
+
         // The scene this starts in can't be read yet in Awake (adding the sounds twice is skipped)
         AddButtonSounds(SceneManager.GetActiveScene());
     }

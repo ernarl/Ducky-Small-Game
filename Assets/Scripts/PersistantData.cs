@@ -67,7 +67,20 @@ public class PersistantData : MonoBehaviour
     public void SetLevelConpletedInfo(int _starAmount)
     {
         playerData.LevelFinished[levelId] = true;
-        playerData.LevelStars[levelId] = _starAmount;
+        // Keep the best result, so replaying a level and doing worse doesn't take stars away
+        playerData.LevelStars[levelId] = Mathf.Max(playerData.LevelStars[levelId], _starAmount);
+    }
+
+    public bool HasMaxStarsOnLevels(int _levelCount)
+    {
+        for (int i = 0; i < _levelCount; i++)
+        {
+            if (playerData.LevelStars[i] < ScoreManager.MAX_STARS)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void SavePlayer()

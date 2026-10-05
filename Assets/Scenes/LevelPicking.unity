@@ -411,6 +411,7 @@ GameObject:
   - component: {fileID: 58365264}
   - component: {fileID: 58365263}
   - component: {fileID: 58365262}
+  - component: {fileID: 58365266}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -534,6 +535,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 58365260}
   m_CullTransparentMesh: 1
+--- !u!114 &58365266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58365260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cefcd2063edde5b47ae4207470fe92cc, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  pressedScale: {x: 0.9, y: 0.9, z: 0.9}
+  animationTime: 0.15
+  scaleOnHover: 1
+  hoverScale: {x: 1.1, y: 1.1, z: 1.1}
 --- !u!1001 &64381172
 PrefabInstance:
   m_ObjectHideFlags: 0

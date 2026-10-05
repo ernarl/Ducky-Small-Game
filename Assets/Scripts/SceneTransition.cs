@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // Covers the screen with squares from left to right, loads the scene, then uncovers it left to right.
+// It can also show a message (like "Thanks for playing!") and play an extra animation on the covered screen before loading.
 // It creates itself the first time it's used, so it doesn't have to be placed in any scene
 // (place it on an empty GameObject in the first scene if you want to tweak the values in the inspector).
 public class SceneTransition : MonoBehaviour
@@ -16,7 +18,15 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private float squareAnimationTime = 0.3f;
     [SerializeField] private float delayPerColumn = 0.03f;
 
+    [Header("Message")]
+    [SerializeField] private Color messageColor = new Color(0.26f, 0.19f, 0.19f);
+    [SerializeField] private float messageScreenHeightPart = 0.1f; // Font size, as a part of the screen height
+    [SerializeField] private float messageWordSpacing = 30f; // Extra space between words (the game's font has narrow spaces)
+    [SerializeField] private float messagePopTime = 0.35f;
+    [SerializeField] private float messageShowTime = 2.5f;
+
     private Canvas canvas;
+    private TextMeshProUGUI messageText;
     private RectTransform[] squares;
     private float[] squareDelays;
     private float animationTotalTime;
@@ -32,6 +42,12 @@ public class SceneTransition : MonoBehaviour
     public static void LoadScene(int _sceneIndex)
     {
         GetInstance().StartTransition(() => SceneManager.LoadSceneAsync(_sceneIndex));
+    }
+
+    // _afterMessage runs after the message, while the screen is still covered
+    public static void LoadScene(string _sceneName, string _message, Func<IEnumerator> _afterMessage = null)
+    {
+        GetInstance().StartTransition(() => SceneManager.LoadSceneAsync(_sceneName), _message, _afterMessage);
     }
 
     private static SceneTransition GetInstance()
@@ -66,16 +82,16 @@ public class SceneTransition : MonoBehaviour
         canvas.enabled = false;
     }
 
-    private void StartTransition(Func<AsyncOperation> _loadScene)
+    private void StartTransition(Func<AsyncOperation> _loadScene, string _message = null, Func<IEnumerator> _afterMessage = null)
     {
         if (isTransitioning)
         {
             return;
         }
-        StartCoroutine(Transition(_loadScene));
+        StartCoroutine(Transition(_loadScene, _message, _afterMessage));
     }
 
-    private IEnumerator Transition(Func<AsyncOperation> _loadScene)
+    private IEnumerator Transition(Func<AsyncOperation> _loadScene, string _message, Func<IEnumerator> _afterMessage)
     {
         isTransitioning = true;
         BuildSquares();
@@ -83,6 +99,15 @@ public class SceneTransition : MonoBehaviour
         AudioManager.Play(SoundNames.SceneTransition);
 
         yield return AnimateSquares(true);
+
+        if (_message != null)
+        {
+            yield return ShowMessage(_message);
+        }
+        if (_afterMessage != null)
+        {
+            yield return _afterMessage();
+        }
 
         AsyncOperation loading = _loadScene();
         while (!loading.isDone)
@@ -146,6 +171,66 @@ public class SceneTransition : MonoBehaviour
                 squareDelays[i] = column * delayPerColumn;
                 i++;
             }
+        }
+    }
+
+    // Pops the message in over the covered screen, keeps it there for a moment, then pops it away
+    private IEnumerator ShowMessage(string _message)
+    {
+        // Taken before the message text is shown, so the font found is one of the scene's texts
+        TMP_Text sceneText = FindObjectOfType<TMP_Text>();
+
+        TextMeshProUGUI text = GetMessageText();
+        if (sceneText != null)
+        {
+            text.font = sceneText.font;
+        }
+        text.fontSize = Screen.height * messageScreenHeightPart;
+        text.text = _message;
+        // In front of the squares, which are rebuilt when the screen size changes
+        text.transform.SetAsLastSibling();
+        text.transform.localScale = Vector3.zero;
+        text.gameObject.SetActive(true);
+        AudioManager.Play(SoundNames.QuestComplete);
+
+        yield return AnimateMessage(true);
+        yield return new WaitForSecondsRealtime(messageShowTime);
+        yield return AnimateMessage(false);
+
+        text.gameObject.SetActive(false);
+    }
+
+    // Created the first time a message is shown. This object isn't placed in any scene, so there's no font
+    // to set in the inspector: it uses the font of the scene's texts instead (the game's font)
+    private TextMeshProUGUI GetMessageText()
+    {
+        if (messageText == null)
+        {
+            GameObject textObject = new GameObject("Message", typeof(RectTransform));
+            textObject.transform.SetParent(transform, false);
+
+            messageText = textObject.AddComponent<TextMeshProUGUI>();
+            messageText.rectTransform.anchorMin = Vector2.zero;
+            messageText.rectTransform.anchorMax = Vector2.one;
+            messageText.rectTransform.offsetMin = Vector2.zero;
+            messageText.rectTransform.offsetMax = Vector2.zero;
+            messageText.alignment = TextAlignmentOptions.Center;
+            messageText.wordSpacing = messageWordSpacing;
+            messageText.color = messageColor;
+            messageText.raycastTarget = false;
+        }
+        return messageText;
+    }
+
+    private IEnumerator AnimateMessage(bool _show)
+    {
+        float time = 0f;
+        while (time < messagePopTime)
+        {
+            time += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(time / messagePopTime);
+            messageText.transform.localScale = Vector3.one * (_show ? EaseOutBack(t) : 1f - EaseInBack(t));
+            yield return null;
         }
     }
 

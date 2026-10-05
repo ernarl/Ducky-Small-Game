@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float coyoteTime = 0.1f; // Can still jump this long after losing contact with the ground
     [SerializeField] private float jumpBufferTime = 0.15f; // A jump pressed this long before landing still happens
     [SerializeField] private float landSoundMinAirTime = 0.3f; // Shorter hops and bumps while rolling don't play the landing sound
+    [SerializeField] private float fallGravityMultiplier = 2.5f; // Stronger gravity only on the way down, so falling is quicker but the jump is just as high
 
     [Header("References")]
     [SerializeField] private Rigidbody rb;
@@ -54,10 +55,7 @@ public class PlayerController : MonoBehaviour
         moveDirection.Normalize();
         rb.AddForce(moveDirection * moveSpeed, ForceMode.Force);
 
-        if (rb.velocity.magnitude > maxSpeed)
-        {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
-        }
+        LimitSpeed();
 
         if (Input.GetButtonDown("Jump"))
         {
@@ -86,6 +84,11 @@ public class PlayerController : MonoBehaviour
             lastGroundedTime = Time.time;
         }
 
+        if (IsFalling())
+        {
+            rb.AddForce(Physics.gravity * (fallGravityMultiplier - 1f), ForceMode.Acceleration);
+        }
+
         if (touchingGround)
         {
             if (Time.time - lastTouchingGroundTime > landSoundMinAirTime)
@@ -94,6 +97,30 @@ public class PlayerController : MonoBehaviour
             }
             lastTouchingGroundTime = Time.time;
         }
+    }
+
+    // Going up (and moving on the ground) is limited the same as always, so the jump height doesn't change.
+    // While falling only the sideways speed is limited, otherwise the fall would be held back to maxSpeed too
+    private void LimitSpeed()
+    {
+        if (IsFalling())
+        {
+            Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            if (horizontalVelocity.magnitude > maxSpeed)
+            {
+                horizontalVelocity = horizontalVelocity.normalized * maxSpeed;
+                rb.velocity = new Vector3(horizontalVelocity.x, rb.velocity.y, horizontalVelocity.z);
+            }
+        }
+        else if (rb.velocity.magnitude > maxSpeed)
+        {
+            rb.velocity = rb.velocity.normalized * maxSpeed;
+        }
+    }
+
+    private bool IsFalling()
+    {
+        return !touchingGround && rb.velocity.y < 0f;
     }
 
     private void OnCollisionEnter(Collision collision)

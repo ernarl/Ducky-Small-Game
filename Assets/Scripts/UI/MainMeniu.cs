@@ -16,6 +16,12 @@ public class MainMeniu : BasicMeniu
 
     private void Awake()
     {
+        // A browser game can't close itself, so there's nothing for the quit button to do
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            quitButton.gameObject.SetActive(false);
+        }
+
         quitButton.onClick.AddListener(() =>
         {
             quitConfirmationPopup.Open();

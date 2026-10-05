@@ -2775,7 +2775,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1175206467}
   audioSourceSfx: {fileID: 1175206466}
-  clipsMusic: []
+  clipsMusic:
+  - name: MainMusic
+    clip: {fileID: 8300000, guid: f238d2d0155e54945a1fc6981a9e0bd9, type: 3}
+    volume: 1
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 1
+    mixerGroup: {fileID: 0}
+    source: {fileID: 0}
   clipsSfx:
   - name: Jump
     clip: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
